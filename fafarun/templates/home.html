@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{% static 'home.css' %}">
+        <title>Home</title>
+    </head>
+
+    <body>
+        
+        <h1>Hello World!</h1>
+
+        <form method="POST">
+            {% csrf_token %} <label for="gameName">Nom utilisateur</label>
+            <input id="gameName" name="gameName" type="text">
+
+            <label for="gameTag">Tag :</label>
+            <input id="gameTag" name="gameTag" type="text">
+
+            <button type="submit">Envoyer</button>
+        </form>
+
+        <h1>Liste des joueurs</h1>
+        
+        {% for player in players %}
+            <p>{{player.gameName}}#{{player.gameTag}}</p>
+        {% endfor %}
+
+    </body>
+</html>

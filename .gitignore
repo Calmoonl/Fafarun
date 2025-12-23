@@ -1,0 +1,13 @@
+# Sécurité (CRUCIAL)
+.env
+.env.local
+
+# Base de données locale
+db.sqlite3
+
+# Fichiers Python inutiles
+__pycache__/
+*.py[cod]
+
+# Dossiers systèmes
+.DS_Store
