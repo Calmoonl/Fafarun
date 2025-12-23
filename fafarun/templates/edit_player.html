@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des joueurs</title>
+</head>
+<body>
+    <h1>Ajouter un joueur</h1>
+    <a href="{% url 'home' %}">Aller voir l'autre page</a>
+    <form method="POST">
+        {% csrf_token %} 
+        <label for="gameName">Nom utilisateur</label>
+        <input id="gameName" name="gameName" type="text">
+
+        <label for="gameTag">Tag :</label>
+        <input id="gameTag" name="gameTag" type="text">
+
+        <button type="submit">Envoyer</button>
+    </form>
+
+    <h1>Liste des joueurs</h1>
+    {% for player in player_list %}
+        <p>{{player.gameName}}#{{player.gameTag}}</p>
+    {% endfor %}
+</body>
+</html>

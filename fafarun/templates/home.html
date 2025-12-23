@@ -8,24 +8,31 @@
     </head>
 
     <body>
-        
-        <h1>Hello World!</h1>
-
-        <form method="POST">
-            {% csrf_token %} <label for="gameName">Nom utilisateur</label>
-            <input id="gameName" name="gameName" type="text">
-
-            <label for="gameTag">Tag :</label>
-            <input id="gameTag" name="gameTag" type="text">
-
-            <button type="submit">Envoyer</button>
-        </form>
-
+        <a href="{% url 'edit_player' %}">Aller voir l'autre page</a>
+    
         <h1>Liste des joueurs</h1>
-        
-        {% for player in players %}
-            <p>{{player.gameName}}#{{player.gameTag}}</p>
-        {% endfor %}
+
+
+        {% if player_list %}
+            <table>
+                <th>Player</th>
+                <th>Lane</th>
+                <th>Elo</th>
+                <th>Games</th>
+                <th>Winrate</th>
+                <th>Last 10</th>
+            {% for player in player_list %}
+                <tr>
+                    <td>{{player.gameName}}#{{player.gameTag}}</td>
+                    <td></td>
+                    <td>{{player.tierSolo}} {{player.rankSolo}} {{player.lp}}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+            </table>
+        {% endif %}
 
     </body>
 </html>
