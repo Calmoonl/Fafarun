@@ -4,7 +4,6 @@
         hx-post="/fafarun/player_infos/{{player.puuid}}"
         hx-trigger="click"
         >
-        {% csrf_token %} 
         <p>{{ player.gameName }}#{{ player.gameTag }}</p>
         <p>{{ player.puuid }}</p>
     </div>
