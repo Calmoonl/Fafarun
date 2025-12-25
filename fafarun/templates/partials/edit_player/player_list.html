@@ -1,0 +1,14 @@
+{% for player in player_list %}
+
+    <div
+        hx-post="/fafarun/player_infos/{{player.puuid}}"
+        hx-trigger="click"
+        >
+        {% csrf_token %} 
+        <p>{{ player.gameName }}#{{ player.gameTag }}</p>
+        <p>{{ player.puuid }}</p>
+    </div>
+
+{% empty %}
+    <p>Aucun joueur</p>
+{% endfor %}

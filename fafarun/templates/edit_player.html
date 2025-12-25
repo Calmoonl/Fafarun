@@ -4,11 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des joueurs</title>
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js" integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz" crossorigin="anonymous"></script>
 </head>
-<body>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+
+    <a href="{% url 'home' %}">Leaderboard</a>
     <h1>Ajouter un joueur</h1>
-    <a href="{% url 'home' %}">Aller voir l'autre page</a>
-    <form method="POST">
+    
+    <form
+        method="POST"
+        hx-post="{% url 'edit_player' %}"
+        hx-target="#players"
+        hx-swap="innerHTML"
+    >
         {% csrf_token %} 
         <label for="gameName">Nom utilisateur</label>
         <input id="gameName" name="gameName" type="text">
@@ -16,12 +24,20 @@
         <label for="gameTag">Tag :</label>
         <input id="gameTag" name="gameTag" type="text">
 
+        <label for="team">Team :</label>
+        <select id="team" name="team">
+            <option value="RAYANE">Rayane</option>
+            <option value="ERWAN">Erwan</option>
+            <option value="NEFF">Neff</option>
+            <option value="ZIZOU">zizou</option>
+        </select>
+
         <button type="submit">Envoyer</button>
     </form>
 
     <h1>Liste des joueurs</h1>
-    {% for player in player_list %}
-        <p>{{player.gameName}}#{{player.gameTag}}</p>
-    {% endfor %}
+    <div id="players">
+        {% include "partials/edit_player/player_list.html" %}
+    </div>
 </body>
 </html>
