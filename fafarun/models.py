@@ -20,12 +20,25 @@ class Player(models.Model):
         ADC = "ADC", "ADC"
         SUPPORT = "SUPPORT", "Support"
 
-        
-    puuid = models.CharField(max_length=255,unique=True)
+    puuid = models.CharField(max_length=255, unique=True, db_index=True)
     gameName = models.CharField(max_length=255)
     gameTag = models.CharField(max_length=5)
-    team = models.CharField(max_length=6,choices=Team.choices,null=True)
-    lane = models.CharField(max_length=7,choices=Lane.choices,null=True)
+
+    team = models.CharField(max_length=6, choices=Team.choices, null=True, blank=True)
+    lane = models.CharField(max_length=7, choices=Lane.choices, null=True, blank=True)
+
+    capitaine = models.BooleanField(default=False)
+
+    lastTenGames = models.JSONField(default=list, blank=True)
+
+    tierSolo = models.CharField(max_length=11, default="UNRANKED", blank=True)
+    rankSolo = models.CharField(max_length=3, default="", blank=True)
+    lpSolo = models.IntegerField(default=0)
+
+    winsSolo = models.IntegerField(default=0)
+    lossesSolo = models.IntegerField(default=0)
+    nbGameSolo = models.IntegerField(default=0)
+    winrateSolo = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     
     def __str__(self):
         return f"{self.gameName}#{self.gameTag}"

@@ -3,9 +3,10 @@
     <div
         hx-post="/fafarun/player_infos/{{player.puuid}}"
         hx-trigger="click"
+        hx-target="#player_infos"
+        hx-swap="innerHTML"
         >
         <p>{{ player.gameName }}#{{ player.gameTag }}</p>
-        <p>{{ player.puuid }}</p>
     </div>
 
 {% empty %}

@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{% static 'main.css' %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+        <title>Liste des joueurs</title>
+        <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js" integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz" crossorigin="anonymous"></script>
+    </head>
+
+
+    <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+
+        <a href="{% url 'home' %}">Leaderboard</a>
+        <h1>Ajouter un joueur</h1>
+        
+        <form
+            method="POST"
+            hx-post="{% url 'players_list' %}"
+            hx-target="#players"
+            hx-swap="innerHTML"
+        >
+            {% csrf_token %}
+            <label for="gameName">Nom utilisateur</label>
+            <input id="gameName" name="gameName" type="text">
+
+            <label for="gameTag">Tag :</label>
+            <input id="gameTag" name="gameTag" type="text">
+
+            <label for="team">Team :</label>
+            <select id="team" name="team">
+                <option value="RAYANE">Rayane</option>
+                <option value="ERWAN">Erwan</option>
+                <option value="NEFF">Neff</option>
+                <option value="ZIZOU">Zizou</option>
+            </select>
+
+            <label for="lane">Lane :</label>
+            <select id="lane" name="lane">
+                <option value="TOP">Top</option>
+                <option value="JUNGLE">Jungle</option>
+                <option value="MID">Mid</option>
+                <option value="ADC">Adc</option>
+                <option value="SUPPORT">Support</option>
+            </select>
+
+            <button type="submit">Envoyer</button>
+        </form>
+
+        <h1>Liste des joueurs</h1>
+        <div id="players">
+            {% include "partials/players_list/player_list.html" %}
+        </div>
+
+        <div id="player_infos">
+            <h1>Aucun joueur sélectionné</h1>
+        </div>
+    </body>
+</html>

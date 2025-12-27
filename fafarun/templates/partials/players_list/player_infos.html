@@ -1,0 +1,36 @@
+<h1>Informations du joueur :</h1>
+
+<form 
+    method="POST"
+    hx-post="/fafarun/edit_player/{{player.puuid}}"
+    hx-target="#player_infos"
+    hx-swap="innerHTML"
+    >
+    {% csrf_token %}
+
+    <label for="editGameName">Nom du joueur :</label>
+    <input type="text" name="editGameName" readonly id="editGameName" value="{{player.gameName}}">
+
+    <label for="editGameTag">Tag du joueur :</label>
+    <input type="text" name="editGameTag" readonly id="editGameTag" value="{{player.gameTag}}">
+
+    <label for="editTeam">Team :</label>
+        <select id="editTeam" name="editTeam">
+            <option value="RAYANE"  {% if player.team == "RAYANE" %}selected{% endif %}>Rayane</option>
+            <option value="ERWAN"   {% if player.team == "ERWAN" %} selected{% endif %}>Erwan</option>
+            <option value="NEFF"    {% if player.team == "NEFF" %}  selected{% endif %}>Neff</option>
+            <option value="ZIZOU"   {% if player.team == "ZIZOU" %} selected{% endif %}>Zizou</option>
+        </select>
+
+    <label for="editLane">Lane :</label>
+        <select id="editLane" name="editLane">
+            <option value="TOP"     {% if player.lane == "TOP" %}    selected{% endif %}>Top</option>
+            <option value="JUNGLE"  {% if player.lane == "JUNGLE"%}  selected{% endif %}>Jungle</option>
+            <option value="MID"     {% if player.lane == "MID" %}    selected{% endif %}>Mid</option>
+            <option value="ADC"     {% if player.lane == "ADC" %}    selected{% endif %}>Adc</option>
+            <option value="SUPPORT" {% if player.lane == "SUPPORT" %}selected{% endif %}>Support</option>
+        </select>
+
+    <button type="submit">Modifer</button>
+
+</form>

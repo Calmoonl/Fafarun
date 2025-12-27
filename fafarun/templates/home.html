@@ -3,13 +3,17 @@
 <html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="{% static 'home.css' %}">
+        <link rel="stylesheet" href="{% static 'main.css' %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Home</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js" integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz" crossorigin="anonymous"></script>
     </head>
 
     <body>
-        <a href="{% url 'edit_player' %}">Ajout de joueurs</a>
+        <a href="{% url 'players_list' %}">Ajout de joueurs</a>
     
         <h1>Liste des joueurs</h1>
 
@@ -26,11 +30,11 @@
                 <tr>
                     <td>{{player.gameName}}#{{player.gameTag}}</td>
                     <td>{{player.team}}</td>
-                    <td></td>
+                    <td>{{player.lane}}</td>
                     <td>{{player.tierSolo}} {{player.rankSolo}} {{player.lp}}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>{{player.nbGameSolo}}</td>
+                    <td>{{player.winrateSolo}}%</td>
+                    <td>{{player.lastTenGames}}</td>
                 </tr>
             {% endfor %}
             </table>
