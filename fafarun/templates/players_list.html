@@ -3,7 +3,7 @@
 <html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="{% static 'main.css' %}">
+        <link rel="stylesheet" href="{% static 'css/main.css' %}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,10 +12,11 @@
         <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js" integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz" crossorigin="anonymous"></script>
     </head>
 
+    <div id="toast-root" class="toast-root"></div>
 
     <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
-        <a href="{% url 'home' %}">Leaderboard</a>
+        <a href="{% url 'leaderboard' %}">Leaderboard</a>
         <h1>Ajouter un joueur</h1>
         
         <form
@@ -23,6 +24,7 @@
             hx-post="{% url 'players_list' %}"
             hx-target="#players"
             hx-swap="innerHTML"
+            hx-on::after-on-load="this.reset()"
         >
             {% csrf_token %}
             <label for="gameName">Nom utilisateur</label>
@@ -48,6 +50,9 @@
                 <option value="SUPPORT">Support</option>
             </select>
 
+            <label for="capitaine">Capitaine</label>
+            <input type="checkbox" id="capitaine" name="capitaine" />
+
             <button type="submit">Envoyer</button>
         </form>
 
@@ -60,4 +65,5 @@
             <h1>Aucun joueur sélectionné</h1>
         </div>
     </body>
+    <script src="{% static 'js/toast.js' %}" defer></script>
 </html>

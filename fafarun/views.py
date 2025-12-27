@@ -7,6 +7,7 @@ import httpx
 import asyncio
 from asgiref.sync import sync_to_async
 from fafarun.utils.api_call import api_call
+import json
 
 API_KEY = settings.RIOT_API_KEY
 MAX_CONCURRENCY = 8
@@ -14,25 +15,42 @@ MATCH_COUNT_DEFAULT = 20
 
 @sync_to_async
 def get_players():
-    return list(Player.objects.all())
+    return list(Player.objects.all().order_by('-rankScore'))
 
 @sync_to_async
-def create_player(puuid: str, gameName: str, gameTag: str, team: str):
+def get_players_by_teams(team:str):
+    return list(Player.objects.filter(team=team).order_by('-rankScore'))
+
+@sync_to_async
+def create_player(puuid: str, gameName: str, gameTag: str, team: str,capitaine:bool,lane:str):
     Player.objects.create(
         puuid=puuid,
         gameName=gameName.strip(),
         gameTag=gameTag.strip(),
         team=team,
+        capitaine=capitaine,
+        lane=lane
     )
     
 @sync_to_async
 def player_exists(puuid: str) -> bool:
     return Player.objects.filter(puuid=puuid).exists()
 
-async def home(request):
-
+async def leaderboard(request):
+    
+    team = request.GET.get("team", "").strip()
+    if request.headers.get("HX-Request") == "true":
+        if team and team != "TOUTES":
+            player_list = await get_players_by_teams(team)
+            resp = render(request, "partials/leaderboard/leaderboard_content.html", {"player_list": player_list})
+            resp["HX-Trigger"] = json.dumps({"toast": {"type": "success", "message": f"Leaderboard filtré sur l'équipe {team}." , "timeout": 3000}})
+            return resp
+        
+        player_list = await get_players()
+        return render(request, "partials/leaderboard/leaderboard_content.html", {"player_list": player_list})
+        
     player_list = await get_players()
-    return render(request, "home.html", {"player_list": player_list})
+    return render(request, "leaderboard.html", {"player_list": player_list})
 
 async def players_list(request):
 
@@ -43,6 +61,8 @@ async def players_list(request):
         gameName = request.POST.get('gameName')
         gameTag = request.POST.get('gameTag')
         team = request.POST.get('team')
+        lane = request.POST.get('lane')
+        capitaine = True if request.POST.get('capitaine') == "on" else False
         
         if gameName and gameTag :
             
@@ -60,9 +80,11 @@ async def players_list(request):
                         if await player_exists(puuid): 
                             print("Joueur existant")
                         else :        
-                            await create_player(puuid, gameName, gameTag, team)
+                            await create_player(puuid, gameName, gameTag, team,capitaine,lane)
                             players = await get_players()
-                            return render(request,"partials/players_list/player_list.html",{"player_list": players})
+                            resp = render(request, "partials/players_list/player_list.html", {"player_list": players})
+                            resp["HX-Trigger"] = json.dumps({"toast": {"type": "success", "message": "Joueur ajouté ✅", "timeout": 3000}})
+                            return resp
                     else :
                         return HttpResponse("Erreur: PUUID introuvable dans la réponse API.")
                     
@@ -83,7 +105,7 @@ async def player_infos(request, puuid:str):
     print(f"PUUID : {puuid}")
     player = await sync_to_async(Player.objects.get)(puuid=puuid)
     return render(request,"partials/players_list/player_infos.html",{"player": player})
-
+    
 async def edit_player(request, puuid:str):
     print(f"PUUID : {puuid}")
     team = request.POST.get("editTeam")
@@ -99,7 +121,9 @@ async def edit_player(request, puuid:str):
 
         player = await sync_to_async(Player.objects.get)(puuid=puuid)
         
-        return render(request,"partials/players_list/player_infos.html",{"player": player})
+        resp = render(request,"partials/players_list/player_infos.html",{"player": player})
+        resp["HX-Trigger"] = json.dumps({"toast": {"type": "success", "message": "Joueur modifié avec succès ✅", "timeout": 10000}})
+        return resp
 
     except Exception as e:
         print(f'Erreur : {e}')

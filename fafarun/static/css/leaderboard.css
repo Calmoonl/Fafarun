@@ -1,0 +1,131 @@
+/* Leaderboard CSS */
+
+main {
+    max-width: 75vw;
+}
+
+.leaderboard-head ,.leaderboard-row {
+    display : grid;
+    /* Top Player Team Elo Games Winrate Last10*/
+    grid-template-columns: 0.3fr 1.5fr 0.5fr 1fr 0.5fr 0.8fr 1fr;
+    padding: 10px;
+    align-items: center;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.leaderboard-head>:nth-child(n + 3) {
+    text-align: center;
+}
+
+/* +4 pour ne pas prendre Team/Late qui en column */
+.leaderboard-row > :nth-child(n + 4):not(:last-child) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Aligné icone et joueur + icone et rang */
+.player-data,.player-elo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 3%;
+}
+
+.player-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10%;
+    object-fit: cover;
+}
+
+/* Classes par team */
+
+.team-rayane,.team-erwan,.team-neff,.team-zizou {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.team-rayane {
+    color: #FF4C4C;
+}
+.team-erwan {
+    color: #4C6FFF;
+}
+.team-neff {
+    color: #4CFF6F;
+}
+.team-zizou {
+    color: #FFD74C;
+}
+
+.player-role {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  background-color: currentColor;
+  -webkit-mask-image: var(--icon);
+  mask-image: var(--icon);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  opacity: .95;
+}
+
+/* Classes par elo */
+.text-diamond {
+    color: var(--diamond);
+}
+
+.text-emerald {
+    color: var(--emerald);
+}
+
+.text-platinum {
+    color: var(--platinum);
+}
+
+.text-gold {
+    color: var(--gold);
+}
+
+.text-silver {
+    color: var(--silver);
+}
+
+.text-bronze {
+    color: var(--bronze);
+}
+
+.text-iron {
+    color: var(--iron);
+}
+
+/* Winrate last 10 games */
+
+.last-ten {
+    display: flex;
+    flex-direction: row;
+    gap: 2%;
+    justify-content: center;
+}
+
+.win,.loss {
+    width: 10px;
+    height: 30px;
+    display: inline-block;
+}
+
+.win {
+    background-color:green;
+}
+
+.loss {
+    background-color:red;
+}

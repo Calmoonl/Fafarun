@@ -1,0 +1,43 @@
+:root {
+    --fafa-violet: #494368;
+    --fafa-yellow: #D2BF55;
+    --diamond: #7989EC;
+    --emerald: #4AC97E;
+    --platinum: #A1E4F9;
+    --gold: #FFD147;
+    --silver: #E8E8E8;
+    --bronze: #C95F16;
+    --iron: #9B9C9E;
+}
+
+body {
+    margin :0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--fafa-violet);
+    color: var(--fafa-yellow);
+}
+
+.toast-root{
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  gap: 10px;
+  z-index: 9999;
+  width: min(360px, calc(100vw - 24px));
+}
+
+.toast{
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(0,0,0,.15);
+  font-size: 14px;
+}
+
+.toast--success{ background:#e9f8ee; border-color:#2f8f4e; }
+.toast--error{ background:#fdecec; border-color:#b42318; }
+.toast--info{ background:#eef2ff; border-color:#2563eb; }

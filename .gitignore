@@ -11,3 +11,6 @@ __pycache__/
 
 # Dossiers systèmes
 .DS_Store
+
+# perso
+utils.txt

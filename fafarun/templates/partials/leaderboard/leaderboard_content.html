@@ -1,0 +1,51 @@
+ {% if player_list %}
+
+    <div class="leaderboard-table">
+        <div class="leaderboard-head">
+            <div>Top</div>
+            <div>Player</div>
+            <div>Team/Lane</div>
+            <div>Rang</div>
+            <div>Games</div>
+            <div>Winrate</div>
+            <div>Last 10</div>
+        </div>
+        <div class="leaderboard-content">
+            {% for player in player_list %}
+                <div class="leaderboard-row">
+
+                    <div>{{forloop.counter}}</div>
+
+                    <div class="player-data">
+                        <img class="player-icon" src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/{{player.icon}}.jpg">
+                        <p>{{player.gameName}}#{{player.gameTag}} {% if player.capitaine %}Capi{% endif %}</p>     
+                    </div>
+
+                    <div class="team-{{player.team|lower}}">
+                        <span class="player-role" style="--icon: url('../img/icones_lol/icones_lane/{{player.lane|lower}}.svg')" aria-label="mid" role="img"></span>
+                        <p>{{player.team}}</p>
+                    </div>
+
+                    <div class="player-elo">
+                        <img src="../static/img/icones_lol/icones_tier/{{player.tierSolo}}_SMALL.webp" alt="">
+                        <p class="text-{{player.tierSolo|lower}}">{{player.rankSolo}} - {{player.lpSolo}} LP</p>
+                    </div>
+
+                    <div>{{player.nbGameSolo}}</div>
+
+                    <div>
+                        <div>{{player.winsSolo}} W - {{player.winsSolo}} L</div>
+                        <div>{{player.winrateSolo}}%</div>
+                    </div>
+
+                    <div class="last-ten">
+                        {% for game in player.lastTenGames %}
+                            <span class="{% if game %}win{% else %}loss{% endif %}"></span>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %} 
+        </div>
+                
+    </div>
+{% endif %}

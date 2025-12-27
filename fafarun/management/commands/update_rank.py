@@ -14,6 +14,32 @@ MAX_CONCURRENCY = 8
 # 2viter erreur 429
 MAX_RETRIES = 6
 
+# Pour calculer un rankScore pour le tri
+TIER_ORDER = {
+    "UNRANKED": 0,
+    "IRON": 1,
+    "BRONZE": 2,
+    "SILVER": 3,
+    "GOLD": 4,
+    "PLATINUM": 5,
+    "EMERALD": 6,
+    "DIAMOND": 7,
+    "MASTER": 8,
+    "GRANDMASTER": 9,
+    "CHALLENGER": 10,
+}
+
+RANK_ORDER = {
+    "": 0,      # Master+
+    "IV": 1,
+    "III": 2,
+    "II": 3,
+    "I": 4,
+}
+
+TIER_COEFF = 100_000
+RANK_COEFF = 10_000
+
 @sync_to_async
 def get_players():
     return list(Player.objects.all())
@@ -37,7 +63,8 @@ async def update_one_player(client, player: Player, sem):
                 break
     
         games = wins + losses
-        winrate = (wins / games * 100.0)
+        winrate = (wins / games * 100.0) if games != 0 else 0.0
+        rankScore = TIER_ORDER.get(tier,0) * TIER_COEFF + RANK_ORDER.get(rank,0) * RANK_COEFF + lp
 
     await sync_to_async(Player.objects.filter(pk=player.pk).update)(
         tierSolo=tier,
@@ -47,8 +74,8 @@ async def update_one_player(client, player: Player, sem):
         lossesSolo = losses,
         winrateSolo = winrate,
         nbGameSolo = games,
+        rankScore = rankScore
     )
-
 
 async def runner():
     players = await get_players()

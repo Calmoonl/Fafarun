@@ -39,6 +39,9 @@ class Player(models.Model):
     lossesSolo = models.IntegerField(default=0)
     nbGameSolo = models.IntegerField(default=0)
     winrateSolo = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    rankScore = models.IntegerField(default=0)
+    
+    icon = models.IntegerField(default=0)
     
     def __str__(self):
         return f"{self.gameName}#{self.gameTag}"
