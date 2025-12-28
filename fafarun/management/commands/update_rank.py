@@ -48,6 +48,7 @@ async def update_one_player(client, player: Player, sem):
     tier, rank, lp = "UNRANKED", "", 0
     wins, losses = 0, 0
     winrate = 0.0
+    rankScore = 0
 
     url = f"https://euw1.api.riotgames.com/lol/league/v4/entries/by-puuid/{player.puuid}"
     results = await api_call(client, url, sem)
@@ -61,20 +62,33 @@ async def update_one_player(client, player: Player, sem):
                 wins = int(result.get("wins", 0) or 0)
                 losses = int(result.get("losses", 0) or 0)
                 break
+
+    games = wins + losses
+    winrate = (wins / games * 100.0) if games else 0.0
+
+    rankScore = (
+        TIER_ORDER.get(tier, 0) * TIER_COEFF
+        + RANK_ORDER.get(rank, 0) * RANK_COEFF
+        + lp
+    )
     
-        games = wins + losses
-        winrate = (wins / games * 100.0) if games != 0 else 0.0
-        rankScore = TIER_ORDER.get(tier,0) * TIER_COEFF + RANK_ORDER.get(rank,0) * RANK_COEFF + lp
+    baseRankScore = player.baseRankScore
+    if baseRankScore is None:
+        baseRankScore = rankScore
+
+    pointsGained = rankScore - baseRankScore
 
     await sync_to_async(Player.objects.filter(pk=player.pk).update)(
         tierSolo=tier,
         rankSolo=rank,
         lpSolo=lp,
-        winsSolo = wins,
-        lossesSolo = losses,
-        winrateSolo = winrate,
-        nbGameSolo = games,
-        rankScore = rankScore
+        winsSolo=wins,
+        lossesSolo=losses,
+        winrateSolo=winrate,
+        nbGameSolo=games,
+        rankScore=rankScore,
+        baseRankScore=baseRankScore,
+        pointsGained=pointsGained,
     )
 
 async def runner():

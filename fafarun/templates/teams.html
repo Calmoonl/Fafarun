@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{% static 'css/main.css' %}">
+        <link rel="stylesheet" href="{% static 'css/leaderboard.css' %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Home</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js" integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz" crossorigin="anonymous"></script>
+    </head>
+
+    <div id="toast-root" class="toast-root"></div>
+
+    <body>
+        <header>
+            <nav>
+                <div hx-get="{% url 'players_list' %}">
+                    Ajout de joueurs
+                </div>
+                <div hx-get="{% url 'players_list' %}">
+                    Team
+                </div>
+                <div hx-get="{% url 'players_list' %}">
+                    Oui
+                </div>
+            </nav>
+        </header>
+        
+        <main>
+            
+            {% for team_key, data in teams %}
+            <section class="team-section team-{{ team_key|lower }}">
+
+                <!-- Header équipe -->
+                <div class="team-header">
+                    <h2>{{ team_key }}</h2>
+                    <span class="team-points">
+                        {% if data.points >= 0 %}+{% endif %}{{ data.points }} pts
+                    </span>
+                </div>
+
+                <!-- Leaderboard -->
+                <div class="leaderboard-content">
+
+                    <div class="leaderboard-head">
+                        <div>#</div>
+                        <div>Joueur</div>
+                        <div>Rang</div>
+                        <div>Games</div>
+                        <div>Winrate</div>
+                        <div>Points</div>
+                    </div>
+
+                    {% for player in data.players %}
+                        <div>
+                            {% comment %} Rang global {% endcomment %}
+                            <div>{{ player.globalRank}}</div>
+
+                            {% comment %} Player {% endcomment %}
+                            <div>
+                                <span>
+                                    {{ player.gameName }}#{{ player.gameTag }}
+                                </span>
+                            </div>
+
+                            {% comment %} Elo {% endcomment %}
+                            <div>
+                                {{ player.tierSolo }} {{ player.rankSolo }}
+                                <span class="lp">{{ player.lpSolo }} LP</span>
+                            </div>
+
+                            {% comment %} Games {% endcomment %}
+                            <div>{{ player.nbGameSolo }}</div>
+
+                            {% comment %} Winrate {% endcomment %}
+                            <div>{{ player.winrateSolo|floatformat:0 }}%</div>
+
+                            {% comment %} Points gagnés {% endcomment %}
+                            <div class="points">
+                                {% if player.pointsGained >= 0 %}+{% endif %}
+                                {{ player.pointsGained }}
+                            </div>
+
+                        </div>
+                    {% empty %}
+                        <div class="leaderboard-row empty">
+                        <div></div>
+                        <div>Aucun joueur</div>
+                        <div></div><div></div><div></div><div></div>
+                        </div>
+                    {% endfor %}
+
+                    </div>
+            </section>
+            {% endfor %}
+
+
+        </main>
+    </body>
+
+    <script src="{% static 'js/toast.js' %}" defer></script>
+
+</html>

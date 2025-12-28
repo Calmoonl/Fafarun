@@ -21,7 +21,7 @@ def get_players():
 
 # Récupères les N derniers matchs
 async def get_match_ids(client, puuid: str, count: int = N):
-    url = f"https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?start=0&count={count}"
+    url = f"https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?queue=420&start=0&count={count}"
     return await api_call(client, url)
 
 # Récupères les infos des N matchs ID et récupérer win/loose

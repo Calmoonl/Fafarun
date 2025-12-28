@@ -1,6 +1,10 @@
 :root {
     --fafa-violet: #494368;
+    --fafa-violet-light: #8983A8;
     --fafa-yellow: #D2BF55;
+    --fafa-gold: #FFDF2F;
+    --fafa-red:#FF6262;
+
     --diamond: #7989EC;
     --emerald: #4AC97E;
     --platinum: #A1E4F9;
@@ -15,9 +19,27 @@ body {
     padding: 0;
     box-sizing: border-box;
     font-family: 'Inter', sans-serif;
-    background-color: var(--fafa-violet);
-    color: var(--fafa-yellow);
+    background-color: var(--fafa-violet-light);
+    color: var(--fafa-gold);
+    height: 100vh;
 }
+
+header{
+    background-color: var(--fafa-violet);
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 5vh;
+}
+
+nav {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 10%;
+}
+
 
 .toast-root{
   position: fixed;

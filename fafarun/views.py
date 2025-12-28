@@ -2,12 +2,13 @@ from django.shortcuts import render
 from django.conf import settings
 from django.http import HttpResponse
 #import requests
-from .models import Player
+from .models import Player,Team,Lane
 import httpx
 import asyncio
 from asgiref.sync import sync_to_async
 from fafarun.utils.api_call import api_call
 import json
+from collections import defaultdict
 
 API_KEY = settings.RIOT_API_KEY
 MAX_CONCURRENCY = 8
@@ -20,6 +21,28 @@ def get_players():
 @sync_to_async
 def get_players_by_teams(team:str):
     return list(Player.objects.filter(team=team).order_by('-rankScore'))
+
+@sync_to_async
+def get_teams():
+    players = Player.objects.exclude(team="").order_by('-rankScore')
+
+    teams = defaultdict(lambda: {"players": [], "points": 0})
+    
+    for global_position, player in enumerate(players, start=1):
+        player.globalRank = global_position
+
+    for player in players:
+        teams[player.team]["players"].append(player)
+        teams[player.team]["points"] += player.pointsGained
+
+    for data in teams.values():
+        data["players"].sort(key=lambda p: p.rankScore, reverse=True)
+    
+    return sorted(
+        teams.items(),
+        key=lambda item: item[1]["points"],
+        reverse=True
+    )
 
 @sync_to_async
 def create_player(puuid: str, gameName: str, gameTag: str, team: str,capitaine:bool,lane:str):
@@ -36,6 +59,7 @@ def create_player(puuid: str, gameName: str, gameTag: str, team: str,capitaine:b
 def player_exists(puuid: str) -> bool:
     return Player.objects.filter(puuid=puuid).exists()
 
+# Page Leaderboard
 async def leaderboard(request):
     
     team = request.GET.get("team", "").strip()
@@ -52,6 +76,7 @@ async def leaderboard(request):
     player_list = await get_players()
     return render(request, "leaderboard.html", {"player_list": player_list})
 
+# Page player list
 async def players_list(request):
 
     players = await get_players()
@@ -100,6 +125,7 @@ async def players_list(request):
     
     return render(request, 'players_list.html',{'player_list':players})
 
+# Route supplémentaires player_list
 async def player_infos(request, puuid:str):
     # puuid = celui cliqué
     print(f"PUUID : {puuid}")
@@ -128,3 +154,8 @@ async def edit_player(request, puuid:str):
     except Exception as e:
         print(f'Erreur : {e}')
         return HttpResponse(e)
+
+# Page Team
+async def teams(request):
+    teams = await get_teams()
+    return render(request, "teams.html", {"teams": teams, "Team": Team})

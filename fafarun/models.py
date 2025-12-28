@@ -5,20 +5,20 @@ class User(models.Model):
     firstname = models.CharField(max_length=255)
     lastname = models.CharField(max_length=255)
     
-class Player(models.Model):
-    
-    class Team(models.TextChoices):
+class Team(models.TextChoices):
         RAYANE = 'RAYANE', 'Rayane'
         ERWAN = 'ERWAN', 'Erwan'
         NEFF = 'NEFF', 'Neff'
         ZIZOU = 'ZIZOU', 'Zizou'
         
-    class Lane(models.TextChoices):
-        TOP = "TOP", "Top"
-        JUNGLE = "JUNGLE", "Jungle"
-        MID = "MID", "Mid"
-        ADC = "ADC", "ADC"
-        SUPPORT = "SUPPORT", "Support"
+class Lane(models.TextChoices):
+    TOP = "TOP", "Top"
+    JUNGLE = "JUNGLE", "Jungle"
+    MID = "MID", "Mid"
+    ADC = "ADC", "ADC"
+    SUPPORT = "SUPPORT", "Support"
+    
+class Player(models.Model):
 
     puuid = models.CharField(max_length=255, unique=True, db_index=True)
     gameName = models.CharField(max_length=255)
@@ -35,6 +35,9 @@ class Player(models.Model):
     rankSolo = models.CharField(max_length=3, default="", blank=True)
     lpSolo = models.IntegerField(default=0)
 
+    baseRankScore = models.IntegerField(null=True, blank=True)
+    pointsGained = models.IntegerField(default=0)   
+    
     winsSolo = models.IntegerField(default=0)
     lossesSolo = models.IntegerField(default=0)
     nbGameSolo = models.IntegerField(default=0)

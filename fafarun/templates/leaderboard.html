@@ -18,7 +18,15 @@
     <body>
         <header>
             <nav>
-                <a href="{% url 'players_list' %}">Ajout de joueurs</a>
+                <div hx-get="{% url 'players_list' %}">
+                    Ajout de joueurs
+                </div>
+                <div hx-get="{% url 'players_list' %}">
+                    Team
+                </div>
+                <div hx-get="{% url 'players_list' %}">
+                    Oui
+                </div>
             </nav>
         </header>
         
